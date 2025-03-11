@@ -17,3 +17,22 @@ export const createNoteSchema = noteSchema.omit({
 });
 
 export type CreateNote = z.infer<typeof createNoteSchema>;
+
+export const todoSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Title is required"),
+  completed: z.boolean().default(false),
+  createdAt: z.number(),
+  updatedAt: z.number()
+});
+
+export type Todo = z.infer<typeof todoSchema>;
+
+export const createTodoSchema = todoSchema.omit({
+  id: true,
+  completed: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export type CreateTodo = z.infer<typeof createTodoSchema>;
