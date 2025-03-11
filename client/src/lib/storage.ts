@@ -4,9 +4,12 @@ import { nanoid } from "nanoid";
 const NOTES_STORAGE_KEY = "notes";
 const TODOS_STORAGE_KEY = "todos";
 
+const isClient = typeof window !== 'undefined';
+
 export const storage = {
   // Notes operations
   getNotes: (): Note[] => {
+    if (!isClient) return [];
     const notes = localStorage.getItem(NOTES_STORAGE_KEY);
     return notes ? JSON.parse(notes).map((note: Note) => ({
       ...note,
@@ -26,7 +29,9 @@ export const storage = {
       updatedAt: timestamp
     };
 
-    localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify([newNote, ...notes]));
+    if (isClient) {
+      localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify([newNote, ...notes]));
+    }
     return newNote;
   },
 
@@ -41,15 +46,18 @@ export const storage = {
       updatedAt: Date.now()
     };
 
-    localStorage.setItem(
-      NOTES_STORAGE_KEY,
-      JSON.stringify(notes.map(n => n.id === id ? updatedNote : n))
-    );
+    if (isClient) {
+      localStorage.setItem(
+        NOTES_STORAGE_KEY,
+        JSON.stringify(notes.map(n => n.id === id ? updatedNote : n))
+      );
+    }
 
     return updatedNote;
   },
 
   deleteNote: (id: string): void => {
+    if (!isClient) return;
     const notes = storage.getNotes();
     localStorage.setItem(
       NOTES_STORAGE_KEY,
@@ -61,7 +69,7 @@ export const storage = {
     const notes = storage.getNotes();
     const searchTerm = query.toLowerCase();
 
-    return notes.filter(note => 
+    return notes.filter(note =>
       note.title.toLowerCase().includes(searchTerm) ||
       note.content.toLowerCase().includes(searchTerm)
     );
@@ -69,6 +77,7 @@ export const storage = {
 
   // Todos operations
   getTodos: (): Todo[] => {
+    if (!isClient) return [];
     const todos = localStorage.getItem(TODOS_STORAGE_KEY);
     return todos ? JSON.parse(todos).map((todo: Todo) => ({
       ...todo,
@@ -89,7 +98,9 @@ export const storage = {
       updatedAt: timestamp
     };
 
-    localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify([newTodo, ...todos]));
+    if (isClient) {
+      localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify([newTodo, ...todos]));
+    }
     return newTodo;
   },
 
@@ -106,15 +117,18 @@ export const storage = {
       updatedAt: Date.now()
     };
 
-    localStorage.setItem(
-      TODOS_STORAGE_KEY,
-      JSON.stringify(todos.map(t => t.id === id ? updatedTodo : t))
-    );
+    if (isClient) {
+      localStorage.setItem(
+        TODOS_STORAGE_KEY,
+        JSON.stringify(todos.map(t => t.id === id ? updatedTodo : t))
+      );
+    }
 
     return updatedTodo;
   },
 
   deleteTodo: (id: string): void => {
+    if (!isClient) return;
     const todos = storage.getTodos();
     localStorage.setItem(
       TODOS_STORAGE_KEY,
@@ -134,7 +148,7 @@ export const storage = {
     const todos = storage.getTodos();
     const searchTerm = query.toLowerCase();
 
-    return todos.filter(todo => 
+    return todos.filter(todo =>
       todo.title.toLowerCase().includes(searchTerm)
     );
   }
