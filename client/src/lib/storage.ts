@@ -8,7 +8,10 @@ export const storage = {
   // Notes operations
   getNotes: (): Note[] => {
     const notes = localStorage.getItem(NOTES_STORAGE_KEY);
-    return notes ? JSON.parse(notes) : [];
+    return notes ? JSON.parse(notes).map((note: Note) => ({
+      ...note,
+      images: note.images || [] // Ensure images array exists
+    })) : [];
   },
 
   createNote: (note: CreateNote): Note => {
@@ -18,6 +21,7 @@ export const storage = {
     const newNote: Note = {
       id: nanoid(),
       ...note,
+      images: note.images || [], // Ensure images array exists
       createdAt: timestamp,
       updatedAt: timestamp
     };
@@ -28,10 +32,12 @@ export const storage = {
 
   updateNote: (id: string, note: CreateNote): Note => {
     const notes = storage.getNotes();
+    const existingNote = notes.find(n => n.id === id);
     const updatedNote: Note = {
       id,
       ...note,
-      createdAt: notes.find(n => n.id === id)?.createdAt || Date.now(),
+      images: note.images || [], // Ensure images array exists
+      createdAt: existingNote?.createdAt || Date.now(),
       updatedAt: Date.now()
     };
 
@@ -64,7 +70,10 @@ export const storage = {
   // Todos operations
   getTodos: (): Todo[] => {
     const todos = localStorage.getItem(TODOS_STORAGE_KEY);
-    return todos ? JSON.parse(todos) : [];
+    return todos ? JSON.parse(todos).map((todo: Todo) => ({
+      ...todo,
+      images: todo.images || [] // Ensure images array exists
+    })) : [];
   },
 
   createTodo: (todo: CreateTodo): Todo => {
@@ -74,6 +83,7 @@ export const storage = {
     const newTodo: Todo = {
       id: nanoid(),
       ...todo,
+      images: todo.images || [], // Ensure images array exists
       completed: false,
       createdAt: timestamp,
       updatedAt: timestamp
@@ -91,6 +101,7 @@ export const storage = {
     const updatedTodo: Todo = {
       ...existingTodo,
       ...updates,
+      images: updates.images || existingTodo.images || [], // Ensure images array exists
       id,
       updatedAt: Date.now()
     };

@@ -76,7 +76,7 @@ export function NoteCard({ note, onUpdate, onDelete }: NoteCardProps) {
               {note.content}
             </ReactMarkdown>
           </div>
-          {note.images.length > 0 && (
+          {note.images && note.images.length > 0 && (
             <div className="grid grid-cols-2 gap-2 mt-4">
               {note.images.map((image, index) => (
                 <img
