@@ -4,6 +4,7 @@ export const noteSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Title is required"),
   content: z.string().min(1, "Content is required"),
+  images: z.array(z.string()).default([]),
   createdAt: z.number(),
   updatedAt: z.number()
 });
@@ -22,6 +23,7 @@ export const todoSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Title is required"),
   completed: z.boolean().default(false),
+  images: z.array(z.string()).default([]),
   createdAt: z.number(),
   updatedAt: z.number()
 });

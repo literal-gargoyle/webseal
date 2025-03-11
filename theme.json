@@ -1,6 +1,6 @@
 {
   "primary": "#0028ad",
-  "variant": "professional",
-  "appearance": "dark",
+  "variant": "tint",
+  "appearance": "light",
   "radius": 1
 }

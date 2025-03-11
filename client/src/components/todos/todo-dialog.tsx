@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { storage } from "@/lib/storage";
 import { createTodoSchema, type Todo } from "@shared/schema";
 
@@ -31,6 +32,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo }: TodoDialogProps
     resolver: zodResolver(createTodoSchema),
     defaultValues: {
       title: todo?.title ?? "",
+      images: todo?.images ?? []
     },
   });
 
@@ -60,6 +62,22 @@ export function TodoDialog({ open, onOpenChange, onSave, todo }: TodoDialogProps
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter todo title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Images</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      images={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

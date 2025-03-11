@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { Pencil, Trash2, Check, X } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -79,6 +79,20 @@ export function TodoCard({ todo, onUpdate, onDelete, onToggle }: TodoCardProps) 
             </div>
           </CardTitle>
         </CardHeader>
+        {todo.images && todo.images.length > 0 && (
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2">
+              {todo.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Todo image ${index + 1}`}
+                  className="w-full h-32 object-cover rounded-md"
+                />
+              ))}
+            </div>
+          </CardContent>
+        )}
         <CardFooter className="text-sm text-muted-foreground">
           Last updated {format(todo.updatedAt, "PPp")}
         </CardFooter>

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { Pencil, Trash2 } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Card,
   CardHeader,
@@ -69,7 +71,23 @@ export function NoteCard({ note, onUpdate, onDelete }: NoteCardProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1">
-          <p className="whitespace-pre-wrap">{note.content}</p>
+          <div className="prose prose-sm max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {note.content}
+            </ReactMarkdown>
+          </div>
+          {note.images.length > 0 && (
+            <div className="grid grid-cols-2 gap-2 mt-4">
+              {note.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Note image ${index + 1}`}
+                  className="w-full h-32 object-cover rounded-md"
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
         <CardFooter className="text-sm text-muted-foreground">
           Last updated {format(note.updatedAt, "PPp")}

@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Dialog,
   DialogContent,
@@ -17,8 +19,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { storage } from "@/lib/storage";
 import { createNoteSchema, type Note } from "@shared/schema";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface NoteDialogProps {
   open: boolean;
@@ -33,6 +37,7 @@ export function NoteDialog({ open, onOpenChange, onSave, note }: NoteDialogProps
     defaultValues: {
       title: note?.title ?? "",
       content: note?.content ?? "",
+      images: note?.images ?? []
     },
   });
 
@@ -48,7 +53,7 @@ export function NoteDialog({ open, onOpenChange, onSave, note }: NoteDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{note ? "Edit Note" : "Create Note"}</DialogTitle>
         </DialogHeader>
@@ -73,11 +78,42 @@ export function NoteDialog({ open, onOpenChange, onSave, note }: NoteDialogProps
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Content</FormLabel>
+                  <Tabs defaultValue="write" className="w-full">
+                    <TabsList>
+                      <TabsTrigger value="write">Write</TabsTrigger>
+                      <TabsTrigger value="preview">Preview</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="write">
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter note content (Markdown supported)"
+                          className="min-h-[200px] font-mono"
+                          {...field}
+                        />
+                      </FormControl>
+                    </TabsContent>
+                    <TabsContent value="preview" className="prose max-w-none">
+                      <div className="min-h-[200px] p-3 border rounded-md">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {field.value}
+                        </ReactMarkdown>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Images</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Enter note content"
-                      className="min-h-[200px]"
-                      {...field}
+                    <ImageUpload
+                      images={field.value}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
