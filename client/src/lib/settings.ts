@@ -37,7 +37,20 @@ export const settings = {
 
   save: (newSettings: Settings) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
-    // Apply theme changes
+
+    // Update theme.json dynamically
+    fetch("/theme.json", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        primary: newSettings.theme.primary,
+        variant: newSettings.theme.variant,
+        appearance: newSettings.theme.appearance,
+        radius: newSettings.theme.radius,
+      }),
+    }).catch(console.error);
+
+    // Apply theme changes immediately
     document.documentElement.style.setProperty("--radius", `${newSettings.theme.radius}rem`);
     // Refresh page to apply new theme
     window.location.reload();
