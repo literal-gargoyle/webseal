@@ -24,8 +24,12 @@ const defaultSettings: Settings = {
   mode: "notes",
 };
 
+// Custom event for settings changes
+const SETTINGS_CHANGE_EVENT = 'app_settings_change';
+
 export const settings = {
   get: (): Settings => {
+    if (typeof window === 'undefined') return defaultSettings;
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return defaultSettings;
     try {
@@ -50,9 +54,17 @@ export const settings = {
       }),
     }).catch(console.error);
 
+    // Dispatch custom event for settings change
+    window.dispatchEvent(new CustomEvent(SETTINGS_CHANGE_EVENT));
+
     // Apply theme changes immediately
     document.documentElement.style.setProperty("--radius", `${newSettings.theme.radius}rem`);
     // Refresh page to apply new theme
     window.location.reload();
+  },
+
+  onChange: (callback: () => void) => {
+    window.addEventListener(SETTINGS_CHANGE_EVENT, callback);
+    return () => window.removeEventListener(SETTINGS_CHANGE_EVENT, callback);
   },
 };

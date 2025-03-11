@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PlusCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -12,12 +12,20 @@ import { settings } from "@/lib/settings";
 import type { Note, Todo } from "@shared/schema";
 
 export default function Home() {
-  const [notes, setNotes] = useState<Note[]>(storage.getNotes());
-  const [todos, setTodos] = useState<Todo[]>(storage.getTodos());
+  // Initialize with empty arrays to avoid hydration errors
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const { toast } = useToast();
-  const mode = settings.get().mode;
+  const [mode, setMode] = useState<'notes' | 'todos'>('notes');
+
+  // Load data after component mounts
+  useEffect(() => {
+    setNotes(storage.getNotes());
+    setTodos(storage.getTodos());
+    setMode(settings.get().mode);
+  }, []);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
