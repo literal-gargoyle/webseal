@@ -1,19 +1,25 @@
 import { Settings, Home } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { settings } from "@/lib/settings";
 
 export function Navbar() {
   const [location] = useLocation();
+  const mode = settings.get().mode;
 
   return (
     <nav className="border-b">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/">
-            <a className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              WebSeal Notes
-            </a>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <a className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                WebSeal ({mode === 'notes' ? 'Notes' : 'Todos'})
+              </a>
+            </Link>
+            <Badge variant="secondary" className="h-5">v0.1</Badge>
+          </div>
           <span className="text-sm text-muted-foreground">
             by webseal.us
           </span>
