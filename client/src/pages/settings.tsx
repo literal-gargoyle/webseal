@@ -57,7 +57,15 @@ export default function SettingsPage() {
           <Form {...form}>
             <form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">Theme</h3>
+              <h3 className="text-lg font-medium flex items-center gap-2">
+                Theme
+                <div className="relative group">
+                  <img src="/client/public/hammer.svg" alt="WIP" className="w-5 h-5 opacity-80" />
+                  <span className="absolute left-1/2 transform -translate-x-1/2 top-full mt-1 w-max bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                    Work in Progress
+                  </span>
+                </div>
+              </h3>
                 <FormField
                   control={form.control}
                   name="theme.primary"
