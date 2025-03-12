@@ -15,10 +15,11 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             <Link href="/">
               <a className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                WebSeal ({mode === 'notes' ? 'Notes' : 'Todos'})
+                WebSeal {mode === 'notes' ? 'Notes' : 'Todos'}
+                <img src="/android-chrome-512x512.png" alt="WebSeal Logo" className="w-6 h-6 ml-2" />
               </a>
             </Link>
-            <Badge variant="secondary" className="h-5">v0.1</Badge>
+            <Badge variant="secondary" className="h-5">v0.2</Badge>
           </div>
           <span className="text-sm text-muted-foreground">
             by webseal.us
